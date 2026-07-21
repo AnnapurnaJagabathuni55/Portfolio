@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naga Annapurna · Data Engineer</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ----- RESET & BASE ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0b0d15;
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #eef2fb;
+      line-height: 1.6;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* ----- GLOW & ANIMATIONS ----- */
+    .glow-text {
+      text-shadow: 0 0 20px rgba(100, 180, 255, 0.3);
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes pulse-border {
+      0% { box-shadow: 0 0 0 0 rgba(0, 180, 255, 0.5); }
+      70% { box-shadow: 0 0 0 18px rgba(0, 180, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 180, 255, 0); }
+    }
+
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .section-title {
+      font-size: 2.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 2.5rem;
+      position: relative;
+      display: inline-block;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -12px;
+      width: 70px;
+      height: 5px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      border-radius: 10px;
+    }
+
+    /* ----- NAVBAR ----- */
+    .navbar {
+      background: rgba(11, 13, 21, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .logo {
+      font-size: 1.7rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #a78bfa, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      font-weight: 500;
+    }
+    .nav-links a {
+      transition: 0.2s;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 4px;
+      font-size: 0.95rem;
+    }
+    .nav-links a:hover {
+      color: #93bbfc;
+      border-bottom-color: #3b82f6;
+    }
+    .nav-hamburger {
+      display: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+
+    /* ----- HERO ----- */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      padding: 2rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+    .hero-content h1 {
+      font-size: 3.2rem;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+    .hero-content h1 span {
+      background: linear-gradient(135deg, #a78bfa, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-tagline {
+      font-size: 1.3rem;
+      color: #b9c7e6;
+      margin-top: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+    }
+    .hero-badge-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin: 1.8rem 0;
+    }
+    .badge {
+      background: rgba(59, 130, 246, 0.12);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #c7d8ff;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      margin-top: 2rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.8rem 2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      transition: 0.25s;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      border: none;
+      color: #fff;
+      box-shadow: 0 8px 24px -6px rgba(59, 130, 246, 0.3);
+    }
+    .btn-primary:hover {
+      transform: scale(1.04);
+      box-shadow: 0 12px 32px -6px #3b82f6;
+    }
+    .btn-outline {
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: #8b5cf6;
+    }
+
+    /* hero photo */
+    .hero-photo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .photo-wrapper {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      padding: 6px;
+      animation: pulse-border 3s infinite;
+      box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.3);
+    }
+    .photo-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #131a2c;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .photo-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    /* fallback avatar */
+    .avatar-fallback {
+      font-size: 6rem;
+      color: #a78bfa;
+      background: #1e253b;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ----- SOCIAL ICONS (floating) ----- */
+    .social-float {
+      display: flex;
+      gap: 1.2rem;
+      margin-top: 1.5rem;
+    }
+    .social-float a {
+      font-size: 1.8rem;
+      transition: 0.2s;
+      color: #9aaed6;
+    }
+    .social-float a:hover {
+      color: #fff;
+      transform: scale(1.15);
+    }
+
+    /* ----- ABOUT SECTION ----- */
+    .about-section {
+      padding: 5rem 0;
+      background: rgba(255, 255, 255, 0.015);
+      border-top: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+    .about-text p {
+      font-size: 1.1rem;
+      color: #d0dcf5;
+      margin-bottom: 1.2rem;
+    }
+    .stats-mini {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.2rem;
+      margin-top: 1.5rem;
+    }
+    .stat-card {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 20px;
+      padding: 1.2rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #a78bfa;
+    }
+    .stat-label {
+      font-size: 0.9rem;
+      color: #b0c3e3;
+    }
+
+    /* ----- EXPERIENCE / SKILLS / CERTIFICATIONS (cards) ----- */
+    .section {
+      padding: 5rem 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 28px;
+      padding: 2rem 1.8rem;
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      transition: 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-8px);
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(139, 92, 246, 0.2);
+      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.6);
+    }
+    .card-icon {
+      font-size: 2.2rem;
+      color: #8b5cf6;
+      margin-bottom: 0.8rem;
+    }
+    .card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.4rem;
+    }
+    .card .sub {
+      color: #9bb0d6;
+      font-size: 0.95rem;
+    }
+    .card ul {
+      list-style: none;
+      margin-top: 1rem;
+    }
+    .card ul li {
+      padding: 0.3rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+    .card ul li i {
+      color: #60a5fa;
+      width: 1.2rem;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+    .skill-tag {
+      background: rgba(59, 130, 246, 0.1);
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    /* resume section */
+    .resume-box {
+      background: rgba(255,255,255,0.02);
+      border-radius: 32px;
+      padding: 2.5rem;
+      border: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* contact */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .contact-item i {
+      width: 2.2rem;
+      height: 2.2rem;
+      background: rgba(139, 92, 246, 0.15);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #a78bfa;
+    }
+
+    /* footer */
+    .footer {
+      padding: 2rem 0;
+      border-top: 1px solid rgba(255,255,255,0.03);
+      text-align: center;
+      color: #6f83aa;
+      font-size: 0.9rem;
+    }
+
+    /* responsive */
+    @media (max-width: 992px) {
+      .hero-grid { grid-template-columns: 1fr; text-align: center; }
+      .hero-content h1 { font-size: 2.8rem; }
+      .hero-actions { justify-content: center; }
+      .social-float { justify-content: center; }
+      .about-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .photo-wrapper { width: 220px; height: 220px; }
+    }
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+      .nav-links.open { display: flex; flex-direction: column; width: 100%; gap: 0.8rem; padding-top: 1rem; }
+      .container { padding: 0 1.2rem; }
+      .section-title { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <div class="logo"><i class="fas fa-database" style="margin-right: 10px;"></i>Annapurna</div>
+      <div class="nav-hamburger" id="hamburger"><i class="fas fa-bars"></i></div>
+      <div class="nav-links" id="navLinks">
+        <a href="#about">About</a>
+        <a href="#experience">Experience</a>
+        <a href="#skills">Skills</a>
+        <a href="#certifications">Certifications</a>
+        <a href="#resume">Resume</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <h1>Naga Annapurna <br><span>Jagabathuni</span></h1>
+        <div class="hero-tagline">Data Engineer · ETL Developer</div>
+        <div class="hero-badge-group">
+          <span class="badge"><i class="fas fa-code"></i> IBM DataStage</span>
+          <span class="badge"><i class="fas fa-database"></i> Teradata · Oracle</span>
+          <span class="badge"><i class="fas fa-cloud"></i> GCP</span>
+        </div>
+        <p style="color:#b9c7e6; max-width: 500px; margin-top: 0.8rem;">I build scalable Enterprise Data Warehouse solutions and high-performance ETL pipelines for large enterprise applications.</p>
+        <div class="hero-actions">
+          <a href="#resume" class="btn btn-primary"><i class="fas fa-file-pdf"></i> Download Resume</a>
+          <a href="#contact" class="btn btn-outline"><i class="fas fa-envelope"></i> Contact Me</a>
+        </div>
+        <div class="social-float">
+          <a href="https://www.linkedin.com/in/naga-annapurna-jagabathuni-9b6379239/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://github.com/AnnapurnaJagabathuni55/" target="_blank"><i class="fab fa-github"></i></a>
+          <a href="https://medium.com/@annapurnajagabathuni505" target="_blank"><i class="fab fa-medium-m"></i></a>
+          <a href="mailto:annapurnajagabathuni505@gmail.com"><i class="fas fa-envelope"></i></a>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <div class="photo-wrapper floating">
+          <div class="photo-inner">
+            <!-- replace src with your own photo -->
+            <img src="C:/Users/Admin/Downloads/profilecircle.png" alt="Annapurna photo">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about-section" id="about">
+    <div class="container">
+      <h2 class="section-title glow-text">About Me</h2>
+      <div class="about-grid">
+        <div class="about-text">
+          <p><strong>Software Engineer</strong> with 4+ years in Enterprise Data Warehousing, ETL Development, Production Support, Data Integration and Cloud Migration. Experienced in IBM InfoSphere DataStage, Teradata SQL, Oracle PL/SQL, Unix, Git, and Google Cloud Migration working in Agile environments.</p>
+          <p>Passionate about solving complex business problems using data engineering, creating robust data pipelines, and ensuring high data quality for mission-critical enterprise applications.</p>
+          <div class="stats-mini">
+            <div class="stat-card"><div class="stat-number">4+</div><div class="stat-label">Years Experience</div></div>
+            <div class="stat-card"><div class="stat-number">10/10</div><div class="stat-label">Client CSAT</div></div>
+            <div class="stat-card"><div class="stat-number">5</div><div class="stat-label">Certifications</div></div>
+            <div class="stat-card"><div class="stat-number">99.9%</div><div class="stat-label">SLA Uptime</div></div>
+          </div>
+        </div>
+        <div style="background: rgba(255,255,255,0.02); border-radius: 28px; padding: 2rem; border:1px solid rgba(255,255,255,0.04);">
+          <h3 style="color:#a78bfa; margin-bottom:1rem;"><i class="fas fa-briefcase"></i> Current Role</h3>
+          <p><strong>Software Engineer @ CGI</strong> · Client: Bell Canada</p>
+          <p style="margin-top: 0.5rem;"><i class="fas fa-map-pin" style="color:#60a5fa;"></i> Hyderabad, India</p>
+          <p><i class="fas fa-certificate" style="color:#60a5fa;"></i> Specialization: ETL & Cloud Migration</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="section" id="experience">
+    <div class="container">
+      <h2 class="section-title glow-text">Experience</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon"><i class="fas fa-building"></i></div>
+          <h3>Software Engineer</h3>
+          <div class="sub">CGI · Aug 2022 – Present</div>
+          <ul>
+            <li><i class="fas fa-check-circle"></i> ETL pipelines with IBM DataStage (50M+ records/day)</li>
+            <li><i class="fas fa-check-circle"></i> SQL & PL/SQL optimization – 30% faster</li>
+            <li><i class="fas fa-check-circle"></i> DataStage → GCP migration (150+ workflows)</li>
+            <li><i class="fas fa-check-circle"></i> Production support, TWS scheduling</li>
+            <li><i class="fas fa-check-circle"></i> Git/GitLab CI/CD, Agile Scrum</li>
+            <li><i class="fas fa-trophy" style="color:#fbbf24;"></i> 10/10 Client CSAT</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i class="fas fa-project-diagram"></i></div>
+          <h3>Key Projects</h3>
+          <div class="sub">End-to-End Data Pipeline · Python, GCP, Databricks</div>
+          <ul>
+            <li><i class="fas fa-check-circle"></i> 10+ GB/day, Apache Spark 5x faster</li>
+            <li><i class="fas fa-check-circle"></i> Automated ingestion – 70% manual effort reduction</li>
+          </ul>
+          <div class="sub" style="margin-top:0.8rem;">Migration Assessment Tool</div>
+          <ul>
+            <li><i class="fas fa-check-circle"></i> 500+ objects analyzed, 60% faster assessment</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section" id="skills" style="background: rgba(255,255,255,0.01);">
+    <div class="container">
+      <h2 class="section-title glow-text">Technical Skills</h2>
+      <div class="card-grid">
+        <div class="card"><i class="fas fa-code card-icon"></i><h3>ETL & Integration</h3><div class="skill-tags"><span class="skill-tag">IBM DataStage</span><span class="skill-tag">Data Integration</span><span class="skill-tag">Data Warehousing</span><span class="skill-tag">ETL Development</span></div></div>
+        <div class="card"><i class="fas fa-database card-icon"></i><h3>Databases</h3><div class="skill-tags"><span class="skill-tag">Teradata</span><span class="skill-tag">Oracle</span><span class="skill-tag">SQL</span><span class="skill-tag">PL/SQL</span><span class="skill-tag">Query Optimization</span></div></div>
+        <div class="card"><i class="fas fa-cloud card-icon"></i><h3>Cloud & DevOps</h3><div class="skill-tags"><span class="skill-tag">GCP</span><span class="skill-tag">Cloud Storage</span><span class="skill-tag">Git</span><span class="skill-tag">GitLab</span><span class="skill-tag">CI/CD</span></div></div>
+        <div class="card"><i class="fas fa-clock card-icon"></i><h3>Scheduling & OS</h3><div class="skill-tags"><span class="skill-tag">Tivoli Workload</span><span class="skill-tag">Control-M</span><span class="skill-tag">Unix/Linux</span><span class="skill-tag">Shell Scripting</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section class="section" id="certifications">
+    <div class="container">
+      <h2 class="section-title glow-text">Certifications</h2>
+      <div class="card-grid">
+        <div class="card"><i class="fas fa-certificate card-icon" style="color:#fbbf24;"></i><h3>Databricks Associate Data Engineer</h3><div class="sub">Databricks</div></div>
+        <div class="card"><i class="fas fa-certificate card-icon" style="color:#fbbf24;"></i><h3>Python Certification</h3><div class="sub">SoloLearn</div></div>
+        <div class="card"><i class="fas fa-certificate card-icon" style="color:#fbbf24;"></i><h3>Google Cloud Professional</h3><div class="sub">In Progress</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESUME -->
+  <section class="section" id="resume">
+    <div class="container">
+      <h2 class="section-title glow-text">My Resume</h2>
+      <div class="resume-box">
+        <div><i class="fas fa-file-pdf" style="font-size:2.4rem; color:#a78bfa; margin-right:1rem;"></i> <span style="font-weight:600;">Naga_Annapurna_Resume.pdf</span></div>
+        <a href="#" class="btn btn-primary" style="padding:0.7rem 2rem;"><i class="fas fa-download"></i> Download PDF</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section" id="contact" style="background: rgba(255,255,255,0.01);">
+    <div class="container">
+      <h2 class="section-title glow-text">Get In Touch</h2>
+      <div class="contact-grid">
+        <div>
+          <div class="contact-item"><i class="fas fa-envelope"></i> annapurnajagabathuni505@gmail.com</div>
+          <div class="contact-item"><i class="fas fa-phone-alt"></i> +91 6302442682</div>
+          <div class="contact-item"><i class="fas fa-map-marker-alt"></i> Hyderabad, Telangana, India</div>
+          <div class="social-float" style="margin-top:1.8rem;">
+            <a href="https://www.linkedin.com/in/naga-annapurna-jagabathuni-9b6379239/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/AnnapurnaJagabathuni55/" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://medium.com/@annapurnajagabathuni505" target="_blank"><i class="fab fa-medium-m"></i></a>
+          </div>
+        </div>
+        <div style="background: rgba(255,255,255,0.02); border-radius: 28px; padding: 2rem; border:1px solid rgba(255,255,255,0.04);">
+          <h3 style="margin-bottom:1rem;">Send a Message</h3>
+          <input type="text" placeholder="Your Name" style="width:100%; padding:0.8rem 1rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius: 40px; color:#fff; margin-bottom:0.8rem;">
+          <input type="email" placeholder="Email" style="width:100%; padding:0.8rem 1rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius: 40px; color:#fff; margin-bottom:0.8rem;">
+          <textarea rows="3" placeholder="Message..." style="width:100%; padding:0.8rem 1rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius: 24px; color:#fff; margin-bottom:1rem;"></textarea>
+          <button class="btn btn-primary" style="width:100%; justify-content:center;"><i class="fas fa-paper-plane"></i> Send</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 Naga Annapurna Jagabathuni · Data Engineer · ETL Developer</p>
+      <div style="margin-top:0.6rem; display:flex; gap:1.5rem; justify-content:center; flex-wrap:wrap;">
+        <a href="https://www.linkedin.com/in/naga-annapurna-jagabathuni-9b6379239/" target="_blank">LinkedIn</a>
+        <a href="https://github.com/AnnapurnaJagabathuni55/" target="_blank">GitHub</a>
+        <a href="https://medium.com/@annapurnajagabathuni505" target="_blank">Medium</a>
+        <a href="mailto:annapurnajagabathuni505@gmail.com">Email</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Hamburger toggle
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    // close on link click (mobile)
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+      });
+    });
+
+    // smooth scroll for all anchor links (optional)
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href === '#') return;
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
